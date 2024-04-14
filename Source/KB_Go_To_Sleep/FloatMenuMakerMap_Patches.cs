@@ -25,6 +25,7 @@ namespace KB_Go_To_Sleep
 
                 foreach (LocalTargetInfo bed in GenUI.TargetsAt(clickPos, ForSleeping(pawn), thingsOnly: true))
                 {
+                    Building_Bed bedBuilding = bed.HasThing ? bed.Thing as Building_Bed : null;
                     if (pawn.needs.rest.CurLevel > FloatMenuMakerMap_AddHumanlikeOrders.FallAsleepMaxLevel(pawn))
                     {
                         opts.Add(new FloatMenuOption("KB_Go_To_Sleep_Cannot_Sleep".Translate() + ": " + "KB_Go_To_Sleep_Not_Tired".Translate().CapitalizeFirst(), null));
@@ -32,6 +33,10 @@ namespace KB_Go_To_Sleep
                     else if (!pawn.CanReach(bed, PathEndMode.OnCell, Danger.Deadly))
                     {
                         opts.Add(new FloatMenuOption("KB_Go_To_Sleep_Cannot_Sleep".Translate() + ": " + "NoPath".Translate().CapitalizeFirst(), null));
+                    }
+                    else if (!(bedBuilding is null) && pawn.BodySize > bedBuilding.def.building.bed_maxBodySize)
+                    {
+                        opts.Add(new FloatMenuOption("KB_Go_To_Sleep_Cannot_Sleep".Translate() + ": " + "KB_Go_To_Sleep_Bed_Too_Small".Translate().CapitalizeFirst(), null));
                     }
                     else
                     {
